@@ -8,6 +8,7 @@ nbproject
 .settings
 .git
 vendor/
+!vendor/mylib/
 public/vendor/
 config/development.config.php
 config/autoload/local.php

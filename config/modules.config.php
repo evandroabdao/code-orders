@@ -21,5 +21,7 @@ return array(
     'ZF\\Rest',
     'ZF\\Rpc',
     'ZF\\Versioning',
+	'ZfrCors',
     'CodeOrders',
+		
 );
