@@ -110,216 +110,6 @@ return array(
             ),
         ),
     ),
-    'CodeOrders\\V1\\Rest\\Clients\\Controller' => array(
-        'description' => 'Handles clients',
-        'collection' => array(
-            'description' => 'Collection of Clients',
-            'GET' => array(
-                'description' => 'Get the client list',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients"
-       },
-       "first": {
-           "href": "/clients?page={page}"
-       },
-       "prev": {
-           "href": "/clients?page={page}"
-       },
-       "next": {
-           "href": "/clients?page={page}"
-       },
-       "last": {
-           "href": "/clients?page={page}"
-       }
-   }
-   "_embedded": {
-       "clients": [
-           {
-               "_links": {
-                   "self": {
-                       "href": "/clients[/:clients_id]"
-                   }
-               }
-              "name": "",
-              "document": "",
-              "address": "",
-              "zipcode": "",
-              "city": "",
-              "state": "",
-              "responsible": "",
-              "email": "",
-              "phone": "",
-              "obs": "",
-              "id": ""
-           }
-       ]
-   }
-}',
-            ),
-            'POST' => array(
-                'description' => 'Inser a new client',
-                'request' => '{
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients[/:clients_id]"
-       }
-   }
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-            ),
-        ),
-        'entity' => array(
-            'description' => 'Client Entity',
-            'GET' => array(
-                'description' => 'Returns a Client',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients[/:clients_id]"
-       }
-   }
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-            ),
-            'PATCH' => array(
-                'description' => 'Update part of a client',
-                'request' => '{
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients[/:clients_id]"
-       }
-   }
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-            ),
-            'PUT' => array(
-                'description' => 'Update a client',
-                'request' => '{
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients[/:clients_id]"
-       }
-   }
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-            ),
-            'DELETE' => array(
-                'description' => 'Delete a client',
-                'request' => '{
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-                'response' => '{
-   "_links": {
-       "self": {
-           "href": "/clients[/:clients_id]"
-       }
-   }
-   "name": "",
-   "document": "",
-   "address": "",
-   "zipcode": "",
-   "city": "",
-   "state": "",
-   "responsible": "",
-   "email": "",
-   "phone": "",
-   "obs": "",
-   "id": ""
-}',
-            ),
-        ),
-    ),
     'CodeOrders\\V1\\Rest\\Products\\Controller' => array(
         'description' => 'Handles Products',
     ),
@@ -598,6 +388,311 @@ return array(
    "first_name": "",
    "last_name": "",
    "role": ""
+}',
+            ),
+        ),
+    ),
+    'CodeOrders\\V1\\Rest\\Clients\\Controller' => array(
+        'description' => 'Handles clients',
+        'collection' => array(
+            'description' => 'Collection of Clients',
+            'GET' => array(
+                'description' => 'Get the client list',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients"
+       },
+       "first": {
+           "href": "/clients?page={page}"
+       },
+       "prev": {
+           "href": "/clients?page={page}"
+       },
+       "next": {
+           "href": "/clients?page={page}"
+       },
+       "last": {
+           "href": "/clients?page={page}"
+       }
+   }
+   "_embedded": {
+       "clients": [
+           {
+               "_links": {
+                   "self": {
+                       "href": "/clients[/:clients_id]"
+                   }
+               }
+              "id":"",
+              "name": "",
+              "document": "",
+              "address": "",
+              "zipcode": "",
+              "city": "",
+              "state": "",
+              "responsible": "",
+              "email": "",
+              "phone": "",
+              "obs": "",
+              "id": ""
+           }
+       ]
+   }
+}',
+            ),
+            'POST' => array(
+                'description' => 'Inser a new client',
+                'request' => '{
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+            ),
+            'DELETE' => array(
+                'request' => '{
+
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients"
+       },
+       "first": {
+           "href": "/clients?page={page}"
+       },
+       "prev": {
+           "href": "/clients?page={page}"
+       },
+       "next": {
+           "href": "/clients?page={page}"
+       },
+       "last": {
+           "href": "/clients?page={page}"
+       }
+   }
+   "_embedded": {
+       "clients": [
+           {
+               "_links": {
+                   "self": {
+                       "href": "/clients[/:clients_id]"
+                   }
+               }
+
+           }
+       ]
+   }
+}',
+            ),
+            'PUT' => array(
+                'request' => '{
+
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients"
+       },
+       "first": {
+           "href": "/clients?page={page}"
+       },
+       "prev": {
+           "href": "/clients?page={page}"
+       },
+       "next": {
+           "href": "/clients?page={page}"
+       },
+       "last": {
+           "href": "/clients?page={page}"
+       }
+   }
+   "_embedded": {
+       "clients": [
+           {
+               "_links": {
+                   "self": {
+                       "href": "/clients[/:clients_id]"
+                   }
+               }
+
+           }
+       ]
+   }
+}',
+            ),
+        ),
+        'entity' => array(
+            'description' => 'Client Entity',
+            'GET' => array(
+                'description' => 'Returns a Client',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+            ),
+            'PATCH' => array(
+                'description' => 'Update part of a client',
+                'request' => '{
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+            ),
+            'PUT' => array(
+                'description' => 'Update a client',
+                'request' => '{
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+            ),
+            'DELETE' => array(
+                'description' => 'Delete a client',
+                'request' => '{
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+   "id":"",
+   "name": "",
+   "document": "",
+   "address": "",
+   "zipcode": "",
+   "city": "",
+   "state": "",
+   "responsible": "",
+   "email": "",
+   "phone": "",
+   "obs": "",
+   "id": ""
+}',
+            ),
+            'POST' => array(
+                'request' => '{
+
+}',
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/clients[/:clients_id]"
+       }
+   }
+
 }',
             ),
         ),

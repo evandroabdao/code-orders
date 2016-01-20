@@ -12,6 +12,7 @@ class ProductsEntity implements HydratorInterface
 	protected $description;
 	
 	protected $price;
+
 	/**
 	 * @return the $id
 	 */

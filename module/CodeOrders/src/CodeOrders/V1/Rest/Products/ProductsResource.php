@@ -1,14 +1,19 @@
 <?php
 namespace CodeOrders\V1\Rest\Products;
 
+use CodeOrders\V1\Rest\Users\UsersRepository;
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 
 class ProductsResource extends AbstractResourceListener
 {
-	
-	public function __construct(ProductsRepository $repository){
+	protected $repository;
+
+    protected $usersRepository;
+
+	public function __construct(ProductsRepository $repository, UsersRepository $usersRepository){
 		$this->repository = $repository;
+		$this->usersRepository = $usersRepository;
 	}
 	
     /**
@@ -19,6 +24,10 @@ class ProductsResource extends AbstractResourceListener
      */
     public function create($data)
     {
+        $user = $this->usersRepository->findByUsername($this->getIdentity()->getRoleId());
+        if($user->getRole()!='administrador'){
+            return new ApiProblem(405, "Only administrator can create new products.");
+        }
         return $this->repository->create($data);
     }
 
@@ -30,6 +39,10 @@ class ProductsResource extends AbstractResourceListener
      */
     public function delete($id)
     {
+        $user = $this->usersRepository->findByUsername($this->getIdentity()->getRoleId());
+        if($user->getRole()!='administrador'){
+            return new ApiProblem(405, "Only administrator can delete products.");
+        }
         return $this->repository->delete($id);
     }
 
@@ -98,6 +111,10 @@ class ProductsResource extends AbstractResourceListener
      */
     public function update($id, $data)
     {
+        $user = $this->usersRepository->findByUsername($this->getIdentity()->getRoleId());
+        if($user->getRole()!='administrador'){
+            return new ApiProblem(405, "Only administrator can update products.");
+        }
         return $this->repository->update($id, $data);
     }
 }

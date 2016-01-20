@@ -33,38 +33,21 @@ class ProductsRepository {
 	
 	public function update($id, $data){
 	
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->update(json_decode(json_encode($data), true), array($this->idColumn=>(int)$id));
+		$result = $this->tableGateway->update(json_decode(json_encode($data), true), array($this->idColumn=>(int)$id));
 	
 		return  $result;
 	}
 	
 	public function create($data){
 	
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->insert(json_decode(json_encode($data), true));
+		$result = $this->tableGateway->insert(json_decode(json_encode($data), true));
 	
 		return  $result;
 	}
 	
 	public function delete($id){
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->delete(array($this->idColumn => (int) $id));
+
+		$result = $this->tableGateway->delete(array($this->idColumn => (int) $id));
 	
 		return $result ? true : false;
 	}

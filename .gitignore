@@ -8,6 +8,7 @@ nbproject
 .settings
 .git
 vendor/
+ionic/
 !vendor/mylib/
 public/vendor/
 config/development.config.php

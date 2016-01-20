@@ -2,6 +2,7 @@
 
 namespace CodeOrders\V1\Rest\Orders;
 
+use CodeOrders\V1\Rest\Users\UsersEntity;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Zend\Stdlib\Hydrator\ClassMethods;
 use Zend\Paginator\Adapter\ArrayAdapter;
@@ -25,33 +26,26 @@ class OrdersRepository {
 		$this->orderItemTableGateway = $orderItemTableGateway; 
 	}
 	
-// 	public function findAll(){
-		
-// 		$hydrator = new ClassMethods();
+	public function findAll(UsersEntity $user){
 
-// 		$orders = $this->tableGateway->select();
-		
-// 		$res = [];
-		
-// 		foreach($orders as $order){
-// 			$items = $this->orderItemTableGateway->select(['order_id'=>$order->getId()]);
-// 			foreach($items as $item){
-// 				$order->addItem($hydrator->extract($item));
-// 			}
-// 			$data = $hydrator->extract($order);
-// 			$res[] = $data;
-// 		}
-// 		return $res;
-// 	}
-	
-	public function findAll(){
-		
-		$hydrator = new ClassMethods();
-		$hydrator->addStrategy('items', new OrderItemHydratorStrategy(new ClassMethods()));
-		$orders = $this->tableGateway->select();
-		
-		$res = [];
-		
+        $hydrator = new ClassMethods();
+        $hydrator->addStrategy('items', new OrderItemHydratorStrategy(new ClassMethods()));
+
+        $res = [];
+
+        switch($user->getRole()){
+            case 'administrador':
+            $orders = $this->tableGateway->select();
+            break;
+            case 'salesman':
+                $orders = $this->tableGateway->select(['user_id'=>$user->getId()]);
+                break;
+            case 'guest':
+            default:
+                return new ApiProblem(405, "Guests can't get orders list.");
+                break;
+        }
+
 		foreach($orders as $order){
 			$items = $this->orderItemTableGateway->select(['order_id'=>$order->getId()]);
 			foreach($items as $item){
@@ -85,49 +79,39 @@ class OrdersRepository {
 	public function getTableGateway(){
 		return $this->tableGateway;
 	}
-	
+
 	public function find($id){
-	
-		$resultSet = $this->tableGateway->select([$this->idColumn=>(int)$id]);
-	
-		return $resultSet->current();
+        $hydrator = new ClassMethods();
+        $hydrator->addStrategy('items', new OrderItemHydratorStrategy(new ClassMethods()));
+        $order = $this->tableGateway->select(['id'=>(int)$id])->current();
+
+        $items = $this->orderItemTableGateway->select(['order_id'=>$id]);
+        foreach($items as $item){
+            $order->addItem($item);
+        }
+        $data = $hydrator->extract($order);
+
+        return $data;
 	}
-	
+
 	public function update($id, $data){
 	
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->update(json_decode(json_encode($data), true), array($this->idColumn=>(int)$id));
+		$result = $this->tableGateway->update(json_decode(json_encode($data), true), array($this->idColumn=>(int)$id));
 	
 		return  $result;
 	}
 	
 	public function create($data){
 	
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->insert(json_decode(json_encode($data), true));
+		$result = $this->tableGateway->insert(json_decode(json_encode($data), true));
 	
 		return  $result;
 	}
 	
 	public function delete($id){
-		$adapter = $this->tableGateway->getAdapter();
-	
-		$hydrator = new HydratingResultSet(new $this->tableEntity(), new $this->tableEntity());
-	
-		$table = new TableGateway($this->tableGatewayName, $adapter, null, $hydrator);
-	
-		$result = $table->delete(array($this->idColumn => (int) $id));
-	
+        $items = $this->orderItemTableGateway->delete(['order_id'=>$id]);
+        $result = $this->tableGateway->delete(array($this->idColumn => (int) $id));
+
 		return $result ? true : false;
 	}
 	

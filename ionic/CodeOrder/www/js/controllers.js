@@ -1,12 +1,30 @@
 angular.module('starter.controllers', [])
 	.controller('LoginCtrl', ['$scope', '$http', '$state','OAuth','OAuthToken',
 	    function($scope, $http, $state, OAuth, OAuthToken){
+            $scope.isSaving = false;
 			$scope.login = function(data){
+                $scope.isSaving = true;
 				OAuth.getAccessToken(data).then(function(){
+                    $scope.isSaving = false;
+					$scope.error_login = data;
 					$state.go('tabs.orders');
 				}, function(data){
-					$scope.error_login = "Usuário ou senha inválidos";
+                    $scope.isSaving = false;
+					$scope.error_login = data;
 				});
+			}
+			$scope.singup = function(data){
+				$http.post('http://192.168.184.128:8888/users', data)
+				.then(
+					function(){
+						OAuth.getAccessToken(data).then(function(){
+							$state.go('tabs.orders');
+						}, function(data){
+							$scope.error_login = "Usuário ou senha inválidos";
+						});
+					}
+				);
+				
 			}
 		}
 	])
@@ -53,11 +71,7 @@ angular.module('starter.controllers', [])
 		
 		var carregarFormasPagamento = function(){
 			$http.get('http://192.168.184.128:8888/ptypes').success(function(data, status){
-				console.log(data);
 				$scope.formasPagamento = data._embedded.ptypes;
-			}).then(function(data, status){
-				console.log(data);
-				console.log(status);
 			});
 		};
 		

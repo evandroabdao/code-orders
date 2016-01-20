@@ -2,6 +2,7 @@
 
 namespace CodeOrders\V1\Rest\Orders;
 
+use CodeOrders\V1\Rest\Users\UsersEntity;
 use Zend\Stdlib\Hydrator\ObjectProperty;
 class OrdersService {
 	
@@ -15,7 +16,7 @@ class OrdersService {
 		$hydrator = new ObjectProperty();
 		$data = $hydrator->extract($data);
 		$data['created_at'] = date('Y-m-d H:i:s');
-		
+
 		$orderData = $data;
 		unset($orderData['item']);
 		$items = $data['item'];
@@ -25,7 +26,7 @@ class OrdersService {
 		try{
 			$tableGateway->getAdapter()->getDriver()->getConnection()->beginTransaction();
 			$orderId = $this->repository->insert($orderData);
-			
+
 			foreach($items as $item){
 				$item['order_id'] = $orderId;
 				$this->repository->insertItem($item);
@@ -39,8 +40,8 @@ class OrdersService {
 		
 		return ['order_id'=>$orderId];
 	}
-	
-	
+
+
 }
 
 ?>
