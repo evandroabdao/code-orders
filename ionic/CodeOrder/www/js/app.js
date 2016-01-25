@@ -24,27 +24,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'angular-oauth2'])
 })
 
 .config(function($stateProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider){
-	
+
 	OAuthProvider.configure({
-		baseUrl: 'http://192.168.184.128:8888',
+		baseUrl: 'http://192.168.0.4:8888',
 		clientId: 'CodeOrders',
 		clientSecret: 'CodeOrders',
 		grantPath: '/oauth',
 		revokePath: '/oauth'
 	});
-	
+
 	OAuthTokenProvider.configure({
 		name: 'token',
 		options: {
 			secure: false
 		}
 	});
-	
+
 	$stateProvider
 		.state('tabs',{
 			url: '/t',
 			abstract: true,
-			templateUrl: 'templates/tabs.html' 
+			templateUrl: 'templates/tabs.html'
 		})
 		.state('tabs.orders',{
 			url: '/orders',
@@ -53,17 +53,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'angular-oauth2'])
 					templateUrl: 'templates/orders.html',
 					controller: 'OrdersCtrl'
 				}
-			},
+			}
 		})
 		.state('tabs.create',{
 			url: '/create',
 			views:{
 				'create-tab':{
 					templateUrl: 'templates/create.html',
-					controller: 'OrdersCreateCtrl'
+					controller: 'OrdersNewCtrl'
 				}
-			},
+			}
 		})
+        .state('tabs.show',{
+            url: '/orders/:id',
+            views:{
+                'orders-tab':{
+                    templateUrl: 'templates/orders_show.html',
+                    controller: 'OrdersShowCtrl'
+                }
+            }
+        })
 		.state('home',{
 			url: '/home',
 			templateUrl: 'templates/home.html',

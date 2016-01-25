@@ -9,6 +9,8 @@ class OrderItemEntity {
 	protected $order_id;
 	
 	protected $product_id;
+
+    protected $product_name;
 	
 	protected $quantity;
 	
@@ -99,6 +101,22 @@ class OrderItemEntity {
 	public function setTotal($total) {
 		$this->total = $total;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getProductName()
+    {
+        return $this->product_name;
+    }
+
+    /**
+     * @param mixed $product_name
+     */
+    public function setProductName($product_name)
+    {
+        $this->product_name = $product_name;
+    }
 
 
 

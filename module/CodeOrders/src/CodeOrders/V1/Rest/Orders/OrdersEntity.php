@@ -6,6 +6,8 @@ class OrdersEntity
 	
 	protected $id;
 	
+	protected $client;
+
 	protected $client_id;
 	
 	protected $user_id;
@@ -33,8 +35,8 @@ class OrdersEntity
 	/**
 	 * @return the $client_id
 	 */
-	public function getClient_id() {
-		return $this->client_id;
+	public function getClient() {
+		return $this->client;
 	}
 
 	/**
@@ -89,8 +91,8 @@ class OrdersEntity
 	/**
 	 * @param field_type $client_id
 	 */
-	public function setClient_id($client_id) {
-		$this->client_id = $client_id;
+	public function setClient($client) {
+		$this->client = $client;
 	}
 
 	/**
@@ -134,6 +136,22 @@ class OrdersEntity
 	public function addItem($item) {
 		$this->items[] = $item;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getClientId()
+    {
+        return $this->client_id;
+    }
+
+    /**
+     * @param mixed $client_id
+     */
+    public function setClientId($client_id)
+    {
+        $this->client_id = $client_id;
+    }
 	
 	
 	

@@ -18,12 +18,15 @@ class OrdersRepository {
 	protected $idColumn = 'id';
 	
 	protected $tableGateway;
-	
+
+	protected $clientTableGateway;
+
 	protected $orderItemTableGateway;
-	
-	public function __construct(AbstractTableGateway $tableGateway, AbstractTableGateway $orderItemTableGateway){
+
+	public function __construct(AbstractTableGateway $tableGateway, AbstractTableGateway $orderItemTableGateway, AbstractTableGateway $clientTableGateway){
 		$this->tableGateway = $tableGateway; 
 		$this->orderItemTableGateway = $orderItemTableGateway; 
+		$this->clientTableGateway = $clientTableGateway;
 	}
 	
 	public function findAll(UsersEntity $user){
@@ -80,18 +83,43 @@ class OrdersRepository {
 		return $this->tableGateway;
 	}
 
-	public function find($id){
+	public function find($id)
+    {
         $hydrator = new ClassMethods();
         $hydrator->addStrategy('items', new OrderItemHydratorStrategy(new ClassMethods()));
-        $order = $this->tableGateway->select(['id'=>(int)$id])->current();
+        $resultSet = $this->tableGateway->select(['id' => (int)$id]);
+        //$items = $this->orderItemTableGateway->select(['order_id'=>$id]);
 
-        $items = $this->orderItemTableGateway->select(['order_id'=>$id]);
-        foreach($items as $item){
-            $order->addItem($item);
+        if ($resultSet->count() == 1) {
+            $order = $resultSet->current();
+
+            $client = $this->clientTableGateway
+                ->select(['id'=>$order->getClientId()])
+                ->current();
+
+
+            $sql = $this->orderItemTableGateway->getSql();
+            $select = $sql->select();
+            $select->join(
+                'products',
+                'order_items.product_id = products.id',
+                ['product_name' => 'name']
+            )->where(['order_id'=>$order->getId()])
+            ;
+
+            $items = $this->orderItemTableGateway->selectWith($select);
+
+            $order->setClient($client);
+            foreach ($items as $item) {
+                $order->addItem($item);
+            }
+
+
+            $data = $hydrator->extract($order);
+
+            return $data;
         }
-        $data = $hydrator->extract($order);
-
-        return $data;
+        return false;
 	}
 
 	public function update($id, $data){

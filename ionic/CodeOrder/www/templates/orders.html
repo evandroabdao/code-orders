@@ -1,5 +1,6 @@
 <ion-header-bar class="bar-positive">
 	<button class="button button-icon ion-android-arrow-back" ng-click="goHome()"></button>
+    <button class="button button-icon ion-minus-circled" ng-click="data.showDelete = !data.showDelete"></button>
 	<h1 class="title">Pedidos Recentes</h1>
 </ion-header-bar>
 <div class="bar bar-subheader item-input-inset">
@@ -11,11 +12,14 @@
 
 <ion-content class="has-subheader">
 	<ion-refresher on-refresh="doRefresh()"></ion-refresher>
-	<ion-list show-delete="true">
-		<ion-item ng-repeat="order in orders | filter: search">
-			#{{order.id}} - Total: R$ {{order.total}} - {{order.created_at}}
-			<ion-delete-button class="ion-checkmark-circled" ng-click="onOrderDelete(order)"></ion-delete-button>
+	<ion-list show-delete="data.showDelete">
+		<ion-item ng-repeat="order in orders | filter: search" ng-click="show(order)">
+            <a href="#" style="text-decoration: none">#{{order.id}} - Total: R$ {{order.total}} - {{order.created_at}}</a>
+            <ion-delete-button class="ion-minus-circled" ng-click="delete(order, $index);"></ion-delete-button>
 		</ion-item>
+
 	</ion-list>
-</ion-content> 
+
+
+</ion-content>
 <!-- ion-checkmark-circled -->
