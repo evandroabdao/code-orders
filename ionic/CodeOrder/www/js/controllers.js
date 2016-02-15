@@ -1,7 +1,11 @@
 angular.module('starter.controllers', [])
-	.controller('LoginCtrl', ['$scope', '$http', '$state','OAuth','OAuthToken',
-	    function($scope, $http, $state, OAuth, OAuthToken){
+	.controller('LoginCtrl', ['$scope', '$http', '$state','OAuth','OAuthToken', '$localStorage',
+	    function($scope, $http, $state, OAuth, OAuthToken, $localStorage){
             $scope.isSaving = false;
+            $localStorage.setObject('oauth',{
+                access_token: '',
+                refresh_token: ''
+            });
 			$scope.login = function(data){
                 $scope.isSaving = true;
 				OAuth.getAccessToken(data).then(function(){
@@ -15,7 +19,7 @@ angular.module('starter.controllers', [])
 			}
 			$scope.singup = function(data){
                 $scope.error_login = data;
-				$http.post('http://192.168.0.4:8888/users', data)
+				$http.post('http://192.168.0.6:8888/users', data)
 				.then(
 					function(){
 						OAuth.getAccessToken(data).then(function(){
@@ -29,11 +33,20 @@ angular.module('starter.controllers', [])
 			}
 		}
 	])
-	.controller('OrdersCtrl', ['$scope', '$http', '$state', 
+    .controller('LogoutCtrl', ['$scope', 'logout', 'OAuthToken', '$state',
+        function ($scope, logout, OAuthToken, $state){
+            $scope.logout = function(){
+                OAuthToken.removeToken();
+                logout.logout();
+                $state.go('login');
+            }
+
+        }
+    ])
+	.controller('OrdersCtrl', ['$scope', '$http', '$state',
 		function ($scope, $http, $state){
-			
 			$scope.getOrders = function(){
-				$http.get('http://192.168.0.4:8888/orders').then(
+				$http.get('http://192.168.0.6:8888/orders').then(
 					function(data){
 						$scope.orders = data.data._embedded.orders;
 					}
@@ -41,7 +54,7 @@ angular.module('starter.controllers', [])
 			};
 
             $scope.delete = function(order, index){
-                $http.delete('http://192.168.0.4:8888/orders/'+order.id).then(
+                $http.delete('http://192.168.0.6:8888/orders/'+order.id).then(
                     function(data){
                         if(data.status==204){
                             $scope.orders.splice(index, 1);
@@ -68,7 +81,7 @@ angular.module('starter.controllers', [])
     .controller('OrdersShowCtrl', ['$scope', '$http', '$stateParams', '$state',
         function($scope, $http, $stateParams, $state){
             $scope.getOrder = function(){
-                $http.get('http://192.168.0.4:8888/orders/'+$stateParams.id).then(
+                $http.get('http://192.168.0.6:8888/orders/'+$stateParams.id).then(
                     function(data){
                         $scope.order = data.data;
                     }
@@ -98,22 +111,30 @@ angular.module('starter.controllers', [])
                 };
             }
             $scope.getClients = function(){
-                $http.get('http://192.168.0.4:8888/clients').then(
+                $http.get('http://192.168.0.6:8888/clients').then(
                     function(data){
                         $scope.clients = data.data._embedded.clients;
                     }
                 );
             };
 
+            $scope.getOrders = function(){
+                $http.get('http://192.168.0.6:8888/orders').then(
+                    function(data){
+                        $scope.orders = data.data._embedded.orders;
+                    }
+                );
+            };
+
             $scope.getPtypes = function(){
-                $http.get('http://192.168.0.4:8888/ptypes').then(
+                $http.get('http://192.168.0.6:8888/ptypes').then(
                     function(data){
                         $scope.ptypes = data.data._embedded.ptypes;
                     }
                 );
             };
             $scope.getProducts = function(){
-                $http.get('http://192.168.0.4:8888/products').then(
+                $http.get('http://192.168.0.6:8888/products').then(
                     function(data){
                         $scope.products = data.data._embedded.products;
                     }
@@ -135,11 +156,33 @@ angular.module('starter.controllers', [])
                         $scope.order.item[index].price = $scope.products[i].price;
                     }
                 }
+                $scope.calculateTotalRow(index);
             };
 
-            $scope.calculateTotalRow = function(){
-                $scope.order.item[index].total = $scope.item[index].quantity * $scope.item[index].price;
+            $scope.calculateTotalRow = function(index){
+                $scope.order.item[index].total = $scope.order.item[index].quantity * $scope.order.item[index].price;
+                calculateTotal();
             };
+
+            calculateTotal = function(){
+                $scope.order.total = 0;
+                for(var i in $scope.order.item){
+                    if($scope.order.item.hasOwnProperty(i)){
+                        $scope.order.total += $scope.order.item[i].total;
+                    }
+                }
+            };
+
+            $scope.save = function(){
+                $http.post('http://192.168.0.6:8888/orders', $scope.order).then(
+                    function(data){
+                        $scope.resetOrder();
+                        $scope.getOrders();
+                        $state.go('tabs.orders');
+                    }
+                );
+            };
+
             $scope.resetOrder();
             $scope.getClients();
             $scope.getPtypes();
@@ -153,4 +196,39 @@ angular.module('starter.controllers', [])
 			};
 		}
 	])
+    .controller('RefreshModalCtrl', ['$rootScope', '$scope', 'OAuth', 'authService', '$timeout','$state','OAuthToken','logout',
+        function($rootScope, $scope, OAuth, authService, $timeout, $state, OAuthToken, logout){
+
+            function destroyModal(){
+                if($rootScope.modal){
+                    $rootScope.modal.hide();
+                    $rootScope.modal = false;
+                }
+            }
+            $scope.$on('event:auth-loginConfirmed', function(){
+                destroyModal();
+            });
+            $scope.$on('event:auth-loginCancelled', function(){
+                destroyModal();
+                logout.logout();
+            });
+
+            $scope.$on('$stateChangeStart',
+                function(event, toState, toParams, fromState, fromParams){
+                    if($rootScope.modal){
+                        authService.loginCancelled();
+                        event.preventDefault();
+                        $state.go('login');
+                    }
+            });
+
+            OAuth.getRefreshToken().then(function(){
+                $timeout(function(){
+                    authService.loginConfirmed();
+                },5000)
+            },function(){
+                authService.loginCancelled();
+                $state.go('login');
+            });
+    }])
 	;

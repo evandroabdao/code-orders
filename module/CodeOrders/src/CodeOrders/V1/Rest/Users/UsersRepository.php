@@ -5,6 +5,7 @@ namespace CodeOrders\V1\Rest\Users;
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\ResultSet\HydratingResultSet;
+use ZF\MvcAuth\Identity\AuthenticatedIdentity;
 
 class UsersRepository {
 
@@ -13,11 +14,13 @@ class UsersRepository {
 	protected $tableEntity = 'CodeOrders\V1\Rest\Users\UsersEntity';
 	
 	protected $idColumn = 'id';
+
+    private $auth;
 	
-	public function __construct(TableGatewayInterface $tableGateway){
+	public function __construct(TableGatewayInterface $tableGateway, AuthenticatedIdentity $auth){
 	
 		$this->tableGateway = $tableGateway;
-	
+        $this->auth = $auth;
 	}
 	
 	public function findAll(){
@@ -58,6 +61,11 @@ class UsersRepository {
 	public function getRoleByUsername($username){
 		return $this->tableGateway->select(['username'=>$username])->current()->getRole();
 	}
+
+    public function getAuthenticated(){
+        $username = $this->auth->getAuthenticationIdentity()['user_id'];
+        return $this->findByUsername($username);
+    }
 }
 
 ?>

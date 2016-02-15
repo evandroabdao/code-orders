@@ -16,13 +16,13 @@ class ProductsRepositoryFactory implements FactoryInterface {
 		$dbAdapter = $serviceLocator->get('DbAdapter');
 		
 		$productsMapper = new ProductsMapper();
-		
+
 		$hydrator = new HydratingResultSet($productsMapper, new ProductsEntity());
 		
 		$tableGateway = new TableGateway('products', $dbAdapter, null, $hydrator);
 		
 		$productsRepository = new ProductsRepository($tableGateway);
-		
+
 		return $productsRepository;
 	}
 	

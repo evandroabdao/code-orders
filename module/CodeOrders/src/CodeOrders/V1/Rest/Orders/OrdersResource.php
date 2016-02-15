@@ -27,9 +27,9 @@ class OrdersResource extends AbstractResourceListener
     public function create($data)
     {
         $user = $this->usersRepository->findByUsername($this->getIdentity()->getRoleId());
-        if($user->getRole()!='salesman'){
-            return new ApiProblem(405, "Only salesman can create orders.");
-        }
+//        if($user->getRole()!='salesman'){
+            //return new ApiProblem(405, "Only salesman can create orders.");
+//        }
     	$result = $this->service->insert($data);
     	if($result=='error'){
     		return new ApiProblem(405, 'Error processing order');

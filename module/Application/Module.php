@@ -21,6 +21,10 @@ class Module
 
         $headers = $e->getRequest()->getHeaders();
         if ($headers->has('Origin')) {
+//        if ($headers->has('Origin') &&
+//        $headers->has('X-Requested-With') &&
+//        $headers->has('X-Requested-With')->getFieldValue() === 'com.ionicframework.codeorder918719')
+//        {
             //convert to array because get method throw an exception
             $headersArray = $headers->toArray();
             $origin = $headersArray['Origin'];
