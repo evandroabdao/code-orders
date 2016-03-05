@@ -19,7 +19,7 @@ angular.module('starter.controllers', [])
 			}
 			$scope.singup = function(data){
                 $scope.error_login = data;
-				$http.post('http://192.168.0.6:8888/users', data)
+				$http.post('http://192.168.0.3:8888/users', data)
 				.then(
 					function(){
 						OAuth.getAccessToken(data).then(function(){
@@ -46,7 +46,7 @@ angular.module('starter.controllers', [])
 	.controller('OrdersCtrl', ['$scope', '$http', '$state',
 		function ($scope, $http, $state){
 			$scope.getOrders = function(){
-				$http.get('http://192.168.0.6:8888/orders').then(
+				$http.get('http://192.168.0.3:8888/orders').then(
 					function(data){
 						$scope.orders = data.data._embedded.orders;
 					}
@@ -54,7 +54,7 @@ angular.module('starter.controllers', [])
 			};
 
             $scope.delete = function(order, index){
-                $http.delete('http://192.168.0.6:8888/orders/'+order.id).then(
+                $http.delete('http://192.168.0.3:8888/orders/'+order.id).then(
                     function(data){
                         if(data.status==204){
                             $scope.orders.splice(index, 1);
@@ -81,7 +81,7 @@ angular.module('starter.controllers', [])
     .controller('OrdersShowCtrl', ['$scope', '$http', '$stateParams', '$state',
         function($scope, $http, $stateParams, $state){
             $scope.getOrder = function(){
-                $http.get('http://192.168.0.6:8888/orders/'+$stateParams.id).then(
+                $http.get('http://192.168.0.3:8888/orders/'+$stateParams.id).then(
                     function(data){
                         $scope.order = data.data;
                     }
@@ -111,7 +111,7 @@ angular.module('starter.controllers', [])
                 };
             }
             $scope.getClients = function(){
-                $http.get('http://192.168.0.6:8888/clients').then(
+                $http.get('http://192.168.0.3:8888/clients').then(
                     function(data){
                         $scope.clients = data.data._embedded.clients;
                     }
@@ -119,7 +119,7 @@ angular.module('starter.controllers', [])
             };
 
             $scope.getOrders = function(){
-                $http.get('http://192.168.0.6:8888/orders').then(
+                $http.get('http://192.168.0.3:8888/orders').then(
                     function(data){
                         $scope.orders = data.data._embedded.orders;
                     }
@@ -127,14 +127,14 @@ angular.module('starter.controllers', [])
             };
 
             $scope.getPtypes = function(){
-                $http.get('http://192.168.0.6:8888/ptypes').then(
+                $http.get('http://192.168.0.3:8888/ptypes').then(
                     function(data){
                         $scope.ptypes = data.data._embedded.ptypes;
                     }
                 );
             };
             $scope.getProducts = function(){
-                $http.get('http://192.168.0.6:8888/products').then(
+                $http.get('http://192.168.0.3:8888/products').then(
                     function(data){
                         $scope.products = data.data._embedded.products;
                     }
@@ -174,7 +174,7 @@ angular.module('starter.controllers', [])
             };
 
             $scope.save = function(){
-                $http.post('http://192.168.0.6:8888/orders', $scope.order).then(
+                $http.post('http://192.168.0.3:8888/orders', $scope.order).then(
                     function(data){
                         $scope.resetOrder();
                         $scope.getOrders();

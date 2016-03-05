@@ -51,7 +51,7 @@ angular.module('starter', [
     $httpProvider.interceptors.splice(0,1);
 
 	OAuthProvider.configure({
-		baseUrl: 'http://192.168.0.6:8888',
+		baseUrl: 'http://192.168.0.3:8888',
 		clientId: 'CodeOrders',
 		clientSecret: 'CodeOrders',
 		grantPath: '/oauth',

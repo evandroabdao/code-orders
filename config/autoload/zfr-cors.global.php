@@ -10,7 +10,7 @@ return array(
          /**
           * Set the list of allowed origins domain with protocol.
           */
-          //'allowed_origins' => array('http://192.168.0.6:8100', 'file://mobile'),
+          //'allowed_origins' => array('http://192.168.0.3:8100', 'file://mobile'),
           'allowed_origins' => array('*'),
 
          /**

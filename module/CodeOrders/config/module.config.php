@@ -47,6 +47,15 @@ return array(
                     ),
                 ),
             ),
+            'code-orders.rest.oauth-clients' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/oauth_clients[/:oauth_clients_id]',
+                    'defaults' => array(
+                        'controller' => 'CodeOrders\\V1\\Rest\\OauthClients\\Controller',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -57,6 +66,7 @@ return array(
             4 => 'code-orders.rest.products',
             5 => 'code-orders.rest.orders',
             6 => 'code-orders.rest.clients',
+            7 => 'code-orders.rest.oauth-clients',
         ),
     ),
     'zf-rest' => array(
@@ -180,6 +190,28 @@ return array(
             'collection_class' => 'CodeOrders\\V1\\Rest\\Clients\\ClientsCollection',
             'service_name' => 'clients',
         ),
+        'CodeOrders\\V1\\Rest\\OauthClients\\Controller' => array(
+            'listener' => 'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsResource',
+            'route_name' => 'code-orders.rest.oauth-clients',
+            'route_identifier_name' => 'oauth_clients_id',
+            'collection_name' => 'oauth_clients',
+            'entity_http_methods' => array(
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+                1 => 'POST',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsEntity',
+            'collection_class' => 'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsCollection',
+            'service_name' => 'oauth_clients',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
@@ -188,6 +220,7 @@ return array(
             'CodeOrders\\V1\\Rest\\Products\\Controller' => 'HalJson',
             'CodeOrders\\V1\\Rest\\Orders\\Controller' => 'HalJson',
             'CodeOrders\\V1\\Rest\\Clients\\Controller' => 'HalJson',
+            'CodeOrders\\V1\\Rest\\OauthClients\\Controller' => 'HalJson',
         ),
         'accept_whitelist' => array(
             'CodeOrders\\V1\\Rest\\Ptypes\\Controller' => array(
@@ -215,6 +248,11 @@ return array(
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ),
+            'CodeOrders\\V1\\Rest\\OauthClients\\Controller' => array(
+                0 => 'application/vnd.code-orders.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
         ),
         'content_type_whitelist' => array(
             'CodeOrders\\V1\\Rest\\Ptypes\\Controller' => array(
@@ -234,6 +272,10 @@ return array(
                 1 => 'application/json',
             ),
             'CodeOrders\\V1\\Rest\\Clients\\Controller' => array(
+                0 => 'application/vnd.code-orders.v1+json',
+                1 => 'application/json',
+            ),
+            'CodeOrders\\V1\\Rest\\OauthClients\\Controller' => array(
                 0 => 'application/vnd.code-orders.v1+json',
                 1 => 'application/json',
             ),
@@ -301,6 +343,18 @@ return array(
                 'route_identifier_name' => 'clients_id',
                 'is_collection' => true,
             ),
+            'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsEntity' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'code-orders.rest.oauth-clients',
+                'route_identifier_name' => 'oauth_clients_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ),
+            'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'code-orders.rest.oauth-clients',
+                'route_identifier_name' => 'oauth_clients_id',
+                'is_collection' => true,
+            ),
         ),
     ),
     'zf-apigility' => array(
@@ -313,6 +367,13 @@ return array(
                 'entity_identifier_name' => 'id',
                 'table_service' => 'CodeOrders\\V1\\Rest\\Ptypes\\PtypesResource\\Table',
             ),
+            'CodeOrders\\V1\\Rest\\OauthClients\\OauthClientsResource' => array(
+                'adapter_name' => 'DbAdapter',
+                'table_name' => 'oauth_clients',
+                'hydrator_name' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+                'controller_service_name' => 'CodeOrders\\V1\\Rest\\OauthClients\\Controller',
+                'entity_identifier_name' => 'id',
+            ),
         ),
     ),
     'zf-content-validation' => array(
@@ -324,6 +385,9 @@ return array(
         ),
         'CodeOrders\\V1\\Rest\\Products\\Controller' => array(
             'input_filter' => 'CodeOrders\\V1\\Rest\\Products\\Validator',
+        ),
+        'CodeOrders\\V1\\Rest\\OauthClients\\Controller' => array(
+            'input_filter' => 'CodeOrders\\V1\\Rest\\OauthClients\\Validator',
         ),
     ),
     'input_filter_specs' => array(
@@ -599,6 +663,113 @@ return array(
                 'validators' => array(),
                 'filters' => array(),
                 'name' => 'role',
+            ),
+        ),
+        'CodeOrders\\V1\\Rest\\OauthClients\\Validator' => array(
+            0 => array(
+                'name' => 'client_secret',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Zend\\Filter\\StringTrim',
+                    ),
+                    1 => array(
+                        'name' => 'Zend\\Filter\\StripTags',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Zend\\Validator\\StringLength',
+                        'options' => array(
+                            'min' => 1,
+                            'max' => '80',
+                        ),
+                    ),
+                ),
+            ),
+            1 => array(
+                'name' => 'redirect_uri',
+                'required' => true,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Zend\\Filter\\StringTrim',
+                    ),
+                    1 => array(
+                        'name' => 'Zend\\Filter\\StripTags',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Zend\\Validator\\StringLength',
+                        'options' => array(
+                            'min' => 1,
+                            'max' => '2000',
+                        ),
+                    ),
+                ),
+            ),
+            2 => array(
+                'name' => 'grant_types',
+                'required' => false,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Zend\\Filter\\StringTrim',
+                    ),
+                    1 => array(
+                        'name' => 'Zend\\Filter\\StripTags',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Zend\\Validator\\StringLength',
+                        'options' => array(
+                            'min' => 1,
+                            'max' => '80',
+                        ),
+                    ),
+                ),
+            ),
+            3 => array(
+                'name' => 'scope',
+                'required' => false,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Zend\\Filter\\StringTrim',
+                    ),
+                    1 => array(
+                        'name' => 'Zend\\Filter\\StripTags',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Zend\\Validator\\StringLength',
+                        'options' => array(
+                            'min' => 1,
+                            'max' => '2000',
+                        ),
+                    ),
+                ),
+            ),
+            4 => array(
+                'name' => 'user_id',
+                'required' => false,
+                'filters' => array(
+                    0 => array(
+                        'name' => 'Zend\\Filter\\StringTrim',
+                    ),
+                    1 => array(
+                        'name' => 'Zend\\Filter\\StripTags',
+                    ),
+                ),
+                'validators' => array(
+                    0 => array(
+                        'name' => 'Zend\\Validator\\StringLength',
+                        'options' => array(
+                            'min' => 1,
+                            'max' => '255',
+                        ),
+                    ),
+                ),
             ),
         ),
     ),
